@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS public."MSB_PUSH_NOTI_MAP" (
+    "ID" NUMERIC,
+    "TYPE" VARCHAR(100),
+    "TITLE" VARCHAR(100),
+    "USER_TYPE" VARCHAR(100),
+    "REGION" VARCHAR(1500),
+    "UNIT" VARCHAR(1500),
+    "CONTRACTOR_TYPE" VARCHAR(1500),
+    "CREATED_BY" VARCHAR(50),
+    "CREATED_ON" timestamp(6) without time zone,
+    "MODIFIED_BY" VARCHAR(50),
+    "MODIFIED_ON" timestamp(6) without time zone,
+    "STATUS" VARCHAR(50)
+);

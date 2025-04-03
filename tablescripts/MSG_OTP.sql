@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS public."MSG_OTP" (
+    "BP_NUMBER" character varying(20) ,   
+    "TYPE" character varying(20) ,   
+    "MOBILE_NUMBER" character varying(15) , 
+    "OTP" character varying(20) , 
+    "COUNT" Integer , 
+    "VALID_UPTO" timestamp(6) without time zone,
+    "CONSUMED_STATUS" character varying(20) , 
+    "SMS_STATUS" character varying(20) , 
+    "CREATED_BY" character varying(50),
+    "CREATED_ON" timestamp(6) without time zone, 
+    "UPDATED_BY" character varying(50), 
+    "UPDATED_ON" timestamp(6) without time zone,
+    "DEVICE_ID" character varying(200),
+    "DEVICE_MODEL" character varying(100),
+    "ANDROID_VERSION" character varying(100),
+    "APPLICATION_VERSION" character varying(10),
+    "OTP_SUBMITTED" character varying(20),
+    "INCORRECT_OTP_COUNT" Integer
+);

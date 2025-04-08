@@ -244,10 +244,12 @@ def convert_date(date_str: str) -> str:
 
 def get_fiscal_year_dates():
     # get and convert date to YYYY-MM-DD format
-    current_fy_start_date = convert_date(os.getenv("CURRENT_FY_START_DATE"))
-    current_fy_end_date = convert_date(os.getenv("CURRENT_FY_END_DATE"))
-    last_fy_start_date = convert_date(os.getenv("LAST_FY_START_DATE"))
-    last_fy_end_date = convert_date(os.getenv("LAST_FY_END_DATE"))
+    today_date = datetime.today()
+    
+    current_fy_start_date = convert_date(os.getenv("CURRENT_FY_START_DATE", f"{today_date.year}-04-01"))
+    current_fy_end_date = convert_date(os.getenv("CURRENT_FY_END_DATE", f"{today_date.year+1}-03-31"))
+    last_fy_start_date = convert_date(os.getenv("LAST_FY_START_DATE", f"{today_date.year-1}-04-01"))
+    last_fy_end_date = convert_date(os.getenv("LAST_FY_END_DATE", f"{today_date.year}-03-31"))
     
     fy_start_ty = datetime.strptime(current_fy_start_date, "%Y-%m-%d")
     fy_end_ty = datetime.strptime(current_fy_end_date, "%Y-%m-%d").replace(hour=23, minute=59, second=59)

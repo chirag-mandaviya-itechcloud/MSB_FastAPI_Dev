@@ -12,8 +12,6 @@ import base64
 import requests
 
 CURRENT_FISCAL_YEAR = os.getenv("FISCAL_YEAR", "2023")
-# Define Fiscal Year Start Month (Change it as per your region)
-FISCAL_YEAR_START_MONTH = int(os.getenv("FISCAL_YEAR_START_MONTH", 4))
 
 SMSAPIKEY= os.getenv("SMSAPIKEY", "P4SVbiZktWsAmPePFyFbqEdYctqtq6qE")
 SMSAPITOKEN= os.getenv("SMSAPITOKEN", "dqzfk7s0-l3xiufgr-2guoud17-ik8ocmk0-qmd4lsic")
@@ -232,23 +230,30 @@ def get_last_day_of_month(year, month):
     last_day = datetime(next_month_year, next_month, 1) - timedelta(days=1)
     return last_day.replace(hour=23, minute=59, second=59)  # Set time to 23:59:59
 
+def convert_date(date_str: str) -> str:
+    if date_str == "":
+        return date_str
+    # Define multiple formats to handle both input date formats
+    for fmt in ("%d-%b-%Y", "%d-%B-%Y","%Y%m%d", "%Y%m%d%H%M%S", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(date_str, fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            continue
+    raise ValueError(f"Date format for {date_str} is not recognized")
 
-FISCAL_YEAR_START_MONTH = 4
+
 def get_fiscal_year_dates():
-    today = datetime.today()
-    current_year = today.year
-    last_year = current_year - 1
-
-    if today.month >= FISCAL_YEAR_START_MONTH:
-        fy_start_ty = datetime(current_year, FISCAL_YEAR_START_MONTH, 1)
-        fy_end_ty = get_last_day_of_month(current_year + 1, FISCAL_YEAR_START_MONTH - 1)
-        fy_start_ly = datetime(last_year, FISCAL_YEAR_START_MONTH, 1)
-        fy_end_ly = get_last_day_of_month(current_year, FISCAL_YEAR_START_MONTH - 1)
-    else:
-        fy_start_ty = datetime(last_year, FISCAL_YEAR_START_MONTH, 1)
-        fy_end_ty = get_last_day_of_month(current_year, FISCAL_YEAR_START_MONTH - 1)
-        fy_start_ly = datetime(last_year - 1, FISCAL_YEAR_START_MONTH, 1)
-        fy_end_ly = get_last_day_of_month(last_year, FISCAL_YEAR_START_MONTH - 1)
+    # get and convert date to YYYY-MM-DD format
+    current_fy_start_date = convert_date(os.getenv("CURRENT_FY_START_DATE"))
+    current_fy_end_date = convert_date(os.getenv("CURRENT_FY_END_DATE"))
+    last_fy_start_date = convert_date(os.getenv("LAST_FY_START_DATE"))
+    last_fy_end_date = convert_date(os.getenv("LAST_FY_END_DATE"))
+    
+    fy_start_ty = datetime.strptime(current_fy_start_date, "%Y-%m-%d")
+    fy_end_ty = datetime.strptime(current_fy_end_date, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
+    
+    fy_start_ly = datetime.strptime(last_fy_start_date, "%Y-%m-%d")
+    fy_end_ly = datetime.strptime(last_fy_end_date, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
 
     return fy_start_ly, fy_end_ly, fy_start_ty, fy_end_ty
 
